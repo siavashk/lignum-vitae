@@ -2,6 +2,8 @@
 
 namespace lv
 {
-    using GraphType = boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS>;
-    GraphType makeDirectedGraphWithCycles();
+    using DirectedGraphType = boost::directed_graph<>;
+    using UndirectedGraphType = boost::undirected_graph<boost::no_property>;
+    DirectedGraphType makeDirectedGraphWithCycles();
+    UndirectedGraphType makeUndirectedTree();
 }

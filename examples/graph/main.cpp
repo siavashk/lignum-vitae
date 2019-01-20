@@ -1,12 +1,15 @@
-#include <io.h>
+#include <writegraph.h>
 #include <graphs.h>
 
 using namespace lv;
 
 int main(int, char *[])
 {
-    GraphType graph = makeDirectedGraphWithCycles();
-    writeGraph(graph, "graph.dot");
+    DirectedGraphType directed = makeDirectedGraphWithCycles();
+    writeGraph(directed, "directed.dot");
+    
+    UndirectedGraphType tree = makeUndirectedTree();
+    writeGraph(tree, "tree.dot");
 
     return EXIT_SUCCESS;
 }
