@@ -5,8 +5,8 @@ using namespace lv;
 
 int main(int, char *[])
 {
-    DirectedGraphType directed = makeDirectedGraphWithCycles();
-    writeGraph(directed, "directed.dot");
+    DirectedGraphType graph = makeDirectedGraphWithCycles();
+    writeGraph(graph, "graph.dot");
 
     return EXIT_SUCCESS;
 }
