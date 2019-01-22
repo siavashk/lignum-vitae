@@ -6,7 +6,7 @@ namespace lv
         boost::property<boost::vertex_color_t, boost::default_color_type>>;
 
     using EdgePropertyType = boost::property<boost::edge_weight_t, int,
-        boost::property<boost::vertex_color_t, boost::default_color_type>>;
+        boost::property<boost::edge_color_t, boost::default_color_type>>;
 
     using DirectedGraphType = boost::adjacency_list<boost::vecS, boost::vecS,
         boost::directedS, VertexPropertyType, EdgePropertyType>;

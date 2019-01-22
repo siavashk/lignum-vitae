@@ -6,14 +6,14 @@ namespace lv
         boost::property<boost::vertex_color_t, boost::default_color_type>>;
 
     using EdgePropertyType = boost::property<boost::edge_weight_t, int,
-        boost::property<boost::vertex_color_t, boost::default_color_type>>;
+        boost::property<boost::edge_color_t, boost::default_color_type>>;
 
     using DirectedGraphType = boost::adjacency_list<boost::vecS, boost::vecS,
         boost::directedS, VertexPropertyType, EdgePropertyType>;
 
     using UndirectedGraphType = boost::adjacency_list<boost::vecS, boost::vecS,
         boost::undirectedS, VertexPropertyType, EdgePropertyType>;
-    
+
     inline const char* colorToString(boost::default_color_type color)
     {
         switch(color)
@@ -42,12 +42,27 @@ namespace lv
     private:
         T graph_;
     };
+    
+    template <typename T>
+    class EdgeWriter
+    {
+    public:
+        EdgeWriter(const T& graph) : graph_(graph) {}
+        template <typename Edge>
+        void operator()(std::ostream& out, const Edge& e) const
+        {
+            auto weightMap = get(boost::edge_weight, graph_);
+            auto colorMap = get(boost::edge_color, graph_);
+            out << "[label=\"" << weightMap[e] << "\", color=\"" << colorToString(colorMap[e]) << "\"]";
+        }
+    private:
+        T graph_;
+    };
 
     template <typename T>
     void writeGraph(const T& graph, const char* filename)
     {
         std::ofstream dotFile(filename);
-        auto vw = VertexWriter<T>(graph);
-        write_graphviz(dotFile, graph, vw);
+        write_graphviz(dotFile, graph, VertexWriter<T>(graph), EdgeWriter<T>(graph));
     }
 }

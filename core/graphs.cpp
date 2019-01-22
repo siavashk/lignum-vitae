@@ -17,9 +17,14 @@ DirectedGraphType lv::makeDirectedGraphWithCycles()
     VertexDescriptor d = add_vertex(VertexPropertyType("d", white_color), g);
     VertexDescriptor e = add_vertex(VertexPropertyType("e", white_color), g);
 
-    add_edge(a, c, g); add_edge(b, b, g); add_edge(b, d, g);
-    add_edge(b, e, g); add_edge(c, b, g); add_edge(c, d, g);
-    add_edge(d, e, g); add_edge(e, a, g); add_edge(e, b, g);
+    add_edge(a, c, EdgePropertyType(1, black_color), g);
+    add_edge(b, d, EdgePropertyType(1, black_color), g);
+    add_edge(b, e, EdgePropertyType(2, black_color), g);
+    add_edge(c, b, EdgePropertyType(5, black_color), g);
+    add_edge(c, d, EdgePropertyType(10, black_color), g);
+    add_edge(d, e, EdgePropertyType(4, black_color), g);
+    add_edge(e, a, EdgePropertyType(3, black_color), g);
+    add_edge(e, b, EdgePropertyType(7, black_color), g);
 
     return g;
 }
