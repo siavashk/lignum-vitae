@@ -99,12 +99,35 @@ DirectedGraphType markPathAlongGraph(
     return marked;
 }
 
-int main(int, char *[])
+std::tuple<const char*, const char*, const char*> parseArgs(int argc, char* argv[])
 {
+    if (argc > 4)
+    {
+        std::cerr << "Usage: " << argv[0] << " [filename] [source-node] [destination-node]" << std::endl;
+        throw std::overflow_error("Too many arguments. Expected at most 4 instead got: " + std::to_string(argc));
+    }
+    
+    const char* filename = argc > 1 ? argv[1] : "djikstra.dot";
+    const char* source = argc > 2 ? argv[2] : "a";
+    const char* destination = argc > 3 ? argv[3] : "d";
+    return std::make_tuple(filename, source, destination);
+}
+
+int main(int argc, char* argv[])
+{
+    std::tuple<const char*, const char*, const char*> args;
+    try
+    {
+        args = parseArgs(argc, argv);
+    }
+    catch(std::exception& excp)
+    {
+        return EXIT_FAILURE;
+    }
     DirectedGraphType graph = makeDirectedGraphWithCycles();
-    auto path = djikstra(graph, "a", "d");
+    auto path = djikstra(graph, std::get<1>(args), std::get<2>(args));
     printPath(graph, path);
     DirectedGraphType marked = markPathAlongGraph(graph, path, boost::gray_color, boost::red_color);
-    writeGraph(marked, "marked.dot");
+    writeGraph(marked, std::get<0>(args));
     return EXIT_SUCCESS;
 }
