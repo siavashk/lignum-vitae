@@ -26,6 +26,14 @@ namespace lv
         }
         return ""; //Unknown
     }
+    
+    struct GraphPropertyWriter
+    {
+        void operator()(std::ostream& out) const
+        {
+            out << "rankdir=\"LR\"" << std::endl;
+        }
+    };
 
     template <typename T>
     class VertexWriter
@@ -63,6 +71,6 @@ namespace lv
     void writeGraph(const T& graph, const char* filename)
     {
         std::ofstream dotFile(filename);
-        write_graphviz(dotFile, graph, VertexWriter<T>(graph), EdgeWriter<T>(graph));
+        write_graphviz(dotFile, graph, VertexWriter<T>(graph), EdgeWriter<T>(graph), GraphPropertyWriter());
     }
 }

@@ -63,7 +63,9 @@ void printPath(
     const std::vector<VertexDescriptor>& path
 ) {
     auto nameMap = boost::get(boost::vertex_name, graph);
-    for (auto it = path.rbegin(); it != path.rend(); ++it)
+    std::cout << "The shortest path between " << nameMap[path.back()] << " and "
+        << nameMap[path.front()] << " is: " << std::endl;
+    for (auto it = path.rbegin(); it < path.rend(); ++it)
     {
         if (it == path.rend() - 1)
             std::cout << nameMap[*it] << std::endl;
@@ -72,11 +74,37 @@ void printPath(
     }
 }
 
+DirectedGraphType markPathAlongGraph(
+    const DirectedGraphType& graph,
+    const std::vector<VertexDescriptor>& path,
+    const boost::default_color_type nodeColor,
+    const boost::default_color_type edgeColor
+) {
+    DirectedGraphType marked;
+    boost::copy_graph(graph, marked);
+    
+    auto nodeColorMap = boost::get(boost::vertex_color, marked);
+    nodeColorMap[path.front()] = nodeColor;
+    nodeColorMap[path.back()] = nodeColor;
+    
+    auto nodeIndexMap = boost::get(boost::vertex_index, marked);
+    for (auto first = path.rbegin(); first < path.rend() - 1; ++first)
+    {
+        auto second = boost::next(first);
+        VertexDescriptor from = nodeIndexMap[*first];
+        VertexDescriptor to = nodeIndexMap[*second];
+        auto edge = boost::edge(from, to, marked).first;
+        boost::put(boost::edge_color, marked, edge, edgeColor);
+    }
+    return marked;
+}
+
 int main(int, char *[])
 {
     DirectedGraphType graph = makeDirectedGraphWithCycles();
     auto path = djikstra(graph, "a", "d");
     printPath(graph, path);
-    
+    DirectedGraphType marked = markPathAlongGraph(graph, path, boost::gray_color, boost::red_color);
+    writeGraph(marked, "marked.dot");
     return EXIT_SUCCESS;
 }
